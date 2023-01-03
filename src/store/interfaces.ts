@@ -1,0 +1,5 @@
+export enum ACTION_SUFFIX {
+    _PENDING = '_PENDING',
+    _FULFILLED = '_FULFILLED',
+    _REJECTED = '_REJECTED'
+}
