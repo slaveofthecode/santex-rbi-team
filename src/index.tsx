@@ -7,12 +7,10 @@ import {
 import { ApolloProvider } from '@apollo/client/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import './index.css';
-import { store } from './store';
 
 const commerceLink = createHttpLink({
   // uri: 'https://shrouded-wave-86340.herokuapp.com/shop-api',
@@ -44,9 +42,7 @@ const client = new ApolloClient({
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <Provider store={store}>
       <App />
-      </Provider>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')

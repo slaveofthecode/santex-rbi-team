@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
-import { useProducts } from '../store/products';
+import { useQuery } from '@apollo/client';
+import { GET_ALL } from '../graphql/queries';
 
 export function ProductList() {
 
-  const { loading, data, error, execute } = useProducts().getAll;
+  const { loading, error, data } = useQuery(GET_ALL);
 
-  useEffect(() => {
-    execute({});
-  }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error : {error.message}</p>;
 
   return (<>
 
@@ -16,11 +15,11 @@ export function ProductList() {
     {error && <div>Error: {error}</div>}
 
     {
-      data && data.map((product: any) => {
+      data && data.products.items.map((product: any) => {
         return (
           <div key={product.id}>
             <div>{product.name}</div>
-            <div>{product.price}</div>
+            <div>{product.description}</div>
           </div>
         );
       })
