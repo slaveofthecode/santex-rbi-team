@@ -1,4 +1,4 @@
-type PRODUCT_ASSETS_TYPE = {
+export type PRODUCT_ASSETS_TYPE = {
     id: string,
     fileSize: number,
     height: number,
@@ -9,7 +9,7 @@ type PRODUCT_ASSETS_TYPE = {
     source: string
 }
 
-type PRODUCT_VARIANTS_TYPE = {
+export type PRODUCT_VARIANTS_TYPE = {
     id: string,
     currencyCode: string,
     updatedAt: string,
