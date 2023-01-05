@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useOrderContext } from '../contexts/orderContext';
+import { useEffect } from 'react';
 
 type Props = {}
 
@@ -6,12 +8,15 @@ const SubTotalOrder = (props: Props) => {
 
     const { order } = useOrderContext();
 
-    console.log('orderData from Context', order);
+    useEffect(() => {
 
+        console.log('Cambio order', order);
+
+    }, [order]);
     return (
         <>
-            <div>$ 345,89</div>
-            <span>{order}</span>
+            <h3>Sub Total: ${order?.subTotal}</h3>
+            <h1><strong>Total: ${order?.total}</strong></h1>
         </>
     )
 }
