@@ -1,37 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { GET_ACTIVE_ORDER } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
+import useStateWithStorage from '../hooks/useStateWithStorage';
+import { KEY_STORAGE } from '../enums';
 
-type OrderContextType = {
-    order: any;
-    setOrder: any;
-}
-
-const OrderContext = createContext<OrderContextType | null>(null);
+const INITIAL_VALUE = { subTotal: 0 }
+const OrderContext = createContext<any>(null);
 
 export const OrderProvider = ({ children }: any) => {
 
-    const { loading, data, error } = useQuery(GET_ACTIVE_ORDER);
-
-    const [order, setOrder] = useState(null);
-
-    const value: OrderContextType = {
-        order,
-        setOrder
-    };
+    const { data } = useQuery(GET_ACTIVE_ORDER);
+    const [orderFromStorage, setOrderFromStorage] = useStateWithStorage(KEY_STORAGE.ORDER_SUB_TOTAL, INITIAL_VALUE.subTotal);
 
     useEffect(() => {
-        if (!loading) {
+        if (!!data) {
             if (data.activeOrder)
-                setOrder(data.activeOrder);
+                setOrderFromStorage(data.activeOrder.subTotal);
             else
-                setOrder(null);
+                setOrderFromStorage(INITIAL_VALUE.subTotal);
         }
-    }, [loading]);
+    }, [data]);
 
     return (
-        <OrderContext.Provider value={value}>
+        <OrderContext.Provider value={
+            {
+                subTotal: orderFromStorage,
+                setSubTotal: setOrderFromStorage
+            }
+        }>
             {children}
         </OrderContext.Provider>
     );

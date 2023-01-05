@@ -1,22 +1,18 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useOrderContext } from '../contexts/orderContext';
-import { useEffect } from 'react';
+import { KEY_STORAGE } from '../enums';
+import useStateWithStorage from '../hooks/useStateWithStorage';
 
 type Props = {}
 
 const SubTotalOrder = (props: Props) => {
 
-    const { order } = useOrderContext();
+    const orderContext = useOrderContext();
+    const [value] = useStateWithStorage(KEY_STORAGE.ORDER_SUB_TOTAL, '');
 
-    useEffect(() => {
-
-        console.log('Cambio order', order);
-
-    }, [order]);
     return (
         <>
-            <h3>Sub Total: ${order?.subTotal}</h3>
-            <h1><strong>Total: ${order?.total}</strong></h1>
+            <h3>Sub Total (from Context): ${orderContext.subTotal}</h3>
+            <h3>Sub Total (from Storage): ${value}</h3>
         </>
     )
 }
