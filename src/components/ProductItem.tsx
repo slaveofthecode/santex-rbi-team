@@ -3,16 +3,19 @@ import React, { useEffect, useState } from 'react'
 import { PRODUCT_ASSETS_TYPE, PRODUCT_TYPE, PRODUCT_VARIANTS_TYPE } from '../types/productType';
 import { useMutation } from '@apollo/client';
 import { ADD_ITEM_TO_ORDER } from '../graphql/mutations';
+import { useOrderContext } from '../contexts/orderContext';
 
 type Props = {
     data: PRODUCT_TYPE
 }
 
 const ProductItem = ({ data }: Props) => {
+    const { name, description, variants, assets } = data;
 
     const [addItemToOrder, { data: dataItemToOrder, loading: loadingItemToOrder, error: errorItemToOrder }] = useMutation(ADD_ITEM_TO_ORDER);
 
-    const { name, description, variants, assets } = data;
+    const { setOrder } = useOrderContext();
+
 
     const [variant, setVariant] = useState<PRODUCT_VARIANTS_TYPE | null>(null);
     const [asset, setAsset] = useState<PRODUCT_ASSETS_TYPE | null>(null);
@@ -44,14 +47,17 @@ const ProductItem = ({ data }: Props) => {
     }
 
     const handleClickBuy = () => {
-        console.log('Buy');
         const variables = {
             productVariantId: parseInt(data.id),
             quantity: parseInt(quantity)
         }
-        console.log({ variables });
+        console.log('Buy : ', { variables });
+
         addItemToOrder({
             variables: variables
+        }).then((res) => {
+            const { addItemToOrder } = res.data;
+            setOrder({ ...addItemToOrder });
         });
     }
 
@@ -61,13 +67,12 @@ const ProductItem = ({ data }: Props) => {
 
     return (
         <>
-
             <div>{name}</div>
             <div>{description}</div>
-            <div>{variant?.price}</div>
-            <div>
+            <div>$ {variant?.price}</div>
+            {/* <div>
                 <img src={asset?.source} alt={data.name} />
-            </div>            
+            </div>             */}
             <input type='button' value='Buy' onClick={handleClickBuy} />
             <input type='number' value={quantity} onChange={handleQuantityChange} min={1} />
         </>

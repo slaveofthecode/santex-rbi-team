@@ -6,7 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import client from './graphql';
 
-import './index.css';
+import './styles/index.css';
 
 ReactDOM.render(
   <React.StrictMode>

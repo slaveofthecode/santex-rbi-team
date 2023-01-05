@@ -30,3 +30,33 @@ export const GET_ALL = gql`
     }
   }   
 `;
+
+export const GET_ACTIVE_ORDER = gql`
+  query {
+    activeOrder {
+      id
+      updatedAt
+      code
+      state
+      active
+      
+      subTotal
+      subTotalWithTax
+      
+      total
+      totalWithTax
+      totalQuantity
+  
+      lines {      
+        unitPrice
+        quantity
+      }
+
+      history {
+        items {
+          id
+        }
+      }
+    }
+  } 
+`;
