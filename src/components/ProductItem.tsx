@@ -4,6 +4,8 @@ import { PRODUCT_ASSETS_TYPE, PRODUCT_TYPE, PRODUCT_VARIANTS_TYPE } from '../typ
 import { useMutation } from '@apollo/client';
 import { ADD_ITEM_TO_ORDER } from '../graphql/mutations';
 import { useOrderContext } from '../contexts/orderContext';
+import { KEY_STORAGE } from '../enums';
+import useStateWithStorage from '../hooks/useStateWithStorage';
 
 type Props = {
     data: PRODUCT_TYPE
@@ -12,9 +14,9 @@ type Props = {
 const ProductItem = ({ data }: Props) => {
     const { name, description, variants, assets } = data;
 
-    const [addItemToOrder, { data: dataItemToOrder, loading: loadingItemToOrder, error: errorItemToOrder }] = useMutation(ADD_ITEM_TO_ORDER);
-
-    const { setOrder } = useOrderContext();
+    const [addItemToOrder] = useMutation(ADD_ITEM_TO_ORDER);
+    const orderContext = useOrderContext();
+    const [, setValue] = useStateWithStorage(KEY_STORAGE.ORDER_SUB_TOTAL, '');
 
 
     const [variant, setVariant] = useState<PRODUCT_VARIANTS_TYPE | null>(null);
@@ -51,13 +53,13 @@ const ProductItem = ({ data }: Props) => {
             productVariantId: parseInt(data.id),
             quantity: parseInt(quantity)
         }
-        console.log('Buy : ', { variables });
 
         addItemToOrder({
             variables: variables
         }).then((res) => {
-            const { addItemToOrder } = res.data;
-            setOrder({ ...addItemToOrder });
+            const { addItemToOrder: { subTotal } } = res.data;
+            setValue(subTotal);
+            orderContext.setSubTotal(subTotal);
         });
     }
 
