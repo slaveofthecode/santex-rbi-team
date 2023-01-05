@@ -6,6 +6,62 @@ import { ADD_ITEM_TO_ORDER } from '../graphql/mutations';
 import { useOrderContext } from '../contexts/orderContext';
 import { KEY_STORAGE } from '../enums';
 import useStateWithStorage from '../hooks/useStateWithStorage';
+import { Button } from '../styles/components/Button.style';
+import styled from 'styled-components';
+
+const ProductItemContainerStyle = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+        'image info button';
+    gap: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-bottom: 20px;    
+`;
+
+const ImageStyle = styled.div`
+    grid-area: image;
+    img {
+        width: 100%;        
+    }
+`;
+
+const InfoStyle = styled.div`
+    grid-area: info;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas:
+        'name'
+        'description'
+        'variants';
+    gap: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-bottom: 20px;    
+`;
+
+const ActionsStyle = styled.div`
+    grid-area: button;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+        'quantity'
+        'button';
+    gap: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-bottom: 20px;    
+`;
 
 type Props = {
     data: PRODUCT_TYPE
@@ -68,16 +124,20 @@ const ProductItem = ({ data }: Props) => {
     }
 
     return (
-        <>
+        <ProductItemContainerStyle>
+            <ImageStyle>
+                <img src={asset?.source} alt={data.name} />
+            </ImageStyle>
+            <InfoStyle>
             <div>{name}</div>
             <div>{description}</div>
             <div>$ {variant?.price}</div>
-            {/* <div>
-                <img src={asset?.source} alt={data.name} />
-            </div>             */}
-            <input type='button' value='Buy' onClick={handleClickBuy} />
+            </InfoStyle>
+            <ActionsStyle>
+                <Button onClick={handleClickBuy} >Buy</Button>
             <input type='number' value={quantity} onChange={handleQuantityChange} min={1} />
-        </>
+            </ActionsStyle>
+        </ProductItemContainerStyle>
     )
 }
 
