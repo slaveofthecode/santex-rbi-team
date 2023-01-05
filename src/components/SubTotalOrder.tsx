@@ -1,20 +1,28 @@
 import { useOrderContext } from '../contexts/orderContext';
 import { KEY_STORAGE } from '../enums';
 import useStateWithStorage from '../hooks/useStateWithStorage';
+import styled from 'styled-components';
+
+const SubTotalOrderStyle = styled.h1`
+    > span {
+        font-size: 1.5rem;
+        color: var(--bg-color-header);
+    }
+`;
 
 type Props = {}
 
 const SubTotalOrder = (props: Props) => {
 
-    const orderContext = useOrderContext();
+    // const orderContext = useOrderContext();
     const [value] = useStateWithStorage(KEY_STORAGE.ORDER_SUB_TOTAL, '');
 
     return (
-        <>
-            <h3>Sub Total (from Context): ${orderContext.subTotal}</h3>
-            <h3>Sub Total (from Storage): ${value}</h3>
-        </>
+        <SubTotalOrderStyle>
+            <span>Sub Total: $</span> {value}
+        </SubTotalOrderStyle>
     )
+    // <h3>Sub Total (from Context): ${orderContext.subTotal}</h3>
 }
 
 export default SubTotalOrder

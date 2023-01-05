@@ -1,3 +1,5 @@
 :root {
-    --bg-color-header: rgba(255, 0, 0, 0.5);
+    --bg-color-header: rgba(255, 0, 0, 1);
+        --bg-color-main: rgba(255, 255, 255, 1);
+        --shadow-color-main: rgba(128, 128, 128, 0.75);
 }
