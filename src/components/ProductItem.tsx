@@ -6,6 +6,39 @@ import { ADD_ITEM_TO_ORDER } from '../graphql/mutations';
 import { useOrderContext } from '../contexts/orderContext';
 import { KEY_STORAGE } from '../enums';
 import useStateWithStorage from '../hooks/useStateWithStorage';
+import styled from 'styled-components';
+import { Button, InputNumber } from '../styles/components';
+
+const ProductItemContainerStyle = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: 200px;
+    gap: 20px;
+    padding: 10px;
+    overflow: auto;
+    border: 1px solid var(--bg-color-secondary);
+    box-shadow: 0 0 10px var(--bg-color-secondary);
+`;
+
+const ImageStyle = styled.div`
+    height: 50%;
+    img {
+        width: 100%;        
+    }
+`;
+
+const InfoStyle = styled.div`
+    height: 25%;
+    overflow: hidden;
+`;
+
+const ActionsStyle = styled.div`
+    height: 25%;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+`;
 
 type Props = {
     data: PRODUCT_TYPE
@@ -68,16 +101,24 @@ const ProductItem = ({ data }: Props) => {
     }
 
     return (
-        <>
-            <div>{name}</div>
-            <div>{description}</div>
-            <div>$ {variant?.price}</div>
-            {/* <div>
+        <ProductItemContainerStyle>
+
+            <ImageStyle>
                 <img src={asset?.source} alt={data.name} />
-            </div>             */}
-            <input type='button' value='Buy' onClick={handleClickBuy} />
-            <input type='number' value={quantity} onChange={handleQuantityChange} min={1} />
-        </>
+            </ImageStyle>
+
+            <InfoStyle>
+                <div>{name}</div>
+                <div>{description}</div>
+                <div>$ {variant?.price}</div>
+            </InfoStyle>
+
+            <ActionsStyle>
+                <Button onClick={handleClickBuy} >Buy</Button>
+                <InputNumber type='number' value={quantity} onChange={handleQuantityChange} min={1} />
+            </ActionsStyle>
+
+        </ProductItemContainerStyle>
     )
 }
 
