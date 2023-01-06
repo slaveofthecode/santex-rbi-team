@@ -14,7 +14,7 @@ type Props = {}
 
 const SubTotalOrder = (props: Props) => {
 
-    // const orderContext = useOrderContext();
+    const orderContext = useOrderContext();
     const [value] = useStateWithStorage(KEY_STORAGE.ORDER_SUB_TOTAL, '');
 
     return (

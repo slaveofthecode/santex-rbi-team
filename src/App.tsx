@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Header } from './components/Header';
 import { ProductList } from './components/ProductList';
 import { OrderProvider } from './contexts/orderContext';
+import Footer from './components/Footer';
 
 const MainContainerStyle = styled.div`
   display: grid;  
@@ -21,27 +22,31 @@ const MainContainerStyle = styled.div`
 
 const ContentStyle = styled.div`
   grid-area: content;
-  background: lightgray;  
-  padding: 20px;
+  padding: 10px;
   `;
 
 const FooterStyle = styled.footer`
   grid-area: footer;
-  background: lightblue;  
-  padding: 20px;
+  background: var(--bg-color-secondary);  
+  padding: 10px;
+  margin: 10px;
 `;
 
 function App() {
   return (
     <OrderProvider>
       <MainContainerStyle>
+
         <Header></Header>
+
         <ContentStyle>
           <ProductList></ProductList>
         </ContentStyle>
-        <FooterStyle>
 
+        <FooterStyle>
+          <Footer></Footer>
         </FooterStyle>
+
       </MainContainerStyle>
     </OrderProvider>
   );

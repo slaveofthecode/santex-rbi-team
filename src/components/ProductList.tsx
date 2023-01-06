@@ -2,6 +2,13 @@
 import { useQuery } from '@apollo/client';
 import { GET_ALL } from '../graphql/queries';
 import ProductItem from './ProductItem';
+import styled from 'styled-components';
+
+const ProductListStyles = styled.div`
+      display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+`;
 
 export function ProductList() {
 
@@ -11,7 +18,7 @@ export function ProductList() {
   if (error) return <p>Error : {error.message}</p>;
 
   return (
-    <div>
+    <ProductListStyles>
 
       {loading && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
@@ -21,5 +28,5 @@ export function ProductList() {
           return <ProductItem key={product.id} data={product} />
         })
       }
-    </div>);
+    </ProductListStyles>);
 } 
