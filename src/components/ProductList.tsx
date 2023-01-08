@@ -5,9 +5,11 @@ import ProductItem from './ProductItem';
 import styled from 'styled-components';
 
 const ProductListStyles = styled.div`
-      display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    grid-gap: 1rem;
+    grid-auto-rows: minmax(300px, auto);
+    /* git-auto-flow: dense; */
 `;
 
 export function ProductList() {
