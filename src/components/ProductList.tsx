@@ -9,7 +9,7 @@ const ProductListStyles = styled.div`
     grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
     grid-gap: 1rem;
     grid-auto-rows: minmax(300px, auto);
-    /* git-auto-flow: dense; */
+    git-auto-flow: dense;
 `;
 
 export function ProductList() {
@@ -18,7 +18,7 @@ export function ProductList() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
-
+  console.log('GET_ALL -> data', data);
   return (
     <ProductListStyles>
 

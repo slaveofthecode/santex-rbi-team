@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
-import { PRODUCT_ASSETS_TYPE, PRODUCT_TYPE, PRODUCT_VARIANTS_TYPE } from '../types/productType';
 import { useMutation } from '@apollo/client';
+import styled from 'styled-components';
 import { ADD_ITEM_TO_ORDER } from '../graphql/mutations';
 import { useOrderContext } from '../contexts/orderContext';
+import { PRODUCT_ASSETS_TYPE, PRODUCT_TYPE, PRODUCT_VARIANTS_TYPE } from '../types/productType';
 import { KEY_STORAGE } from '../enums';
 import useStateWithStorage from '../hooks/useStateWithStorage';
-import styled from 'styled-components';
 import { Button, InputNumber } from '../styles/components';
 
 const ProductItemContainerStyle = styled.div`
@@ -99,16 +99,6 @@ const ProductItemContainerStyle = styled.div`
     }
 `;
 
-// const ImageStyle = styled.figure`
-//      height: 50%;
-//     img {
-//         display: block;
-//         max-width: 100%;
-//         height: auto;      
-//     }
-// `;
-
-
 type Props = {
     data: PRODUCT_TYPE
 }
@@ -121,14 +111,14 @@ const ProductItem = ({ data }: Props) => {
     const [, setValue] = useStateWithStorage(KEY_STORAGE.ORDER_SUB_TOTAL, '');
 
 
-    const [variant, setVariant] = useState<PRODUCT_VARIANTS_TYPE | null>(null);
+    const [variant, setVariant] = useState<PRODUCT_VARIANTS_TYPE>();
     const [asset, setAsset] = useState<PRODUCT_ASSETS_TYPE | null>(null);
     const [quantity, setQuantity] = useState<string>('1');
 
 
     useEffect(() => {
         const variant = getVariant();
-        setVariant(variant);
+        variant && setVariant(variant);
 
         const asset = getAsset();
         setAsset(asset);
@@ -138,6 +128,7 @@ const ProductItem = ({ data }: Props) => {
     const getVariant = () => {
         if (!variants.length) return null;
 
+        // get the last variant.id
         const sortedVariants = [...variants].sort((a: any, b: any) => a.id - b.id);
         return sortedVariants[0];
 
@@ -152,14 +143,15 @@ const ProductItem = ({ data }: Props) => {
 
     const handleClickBuy = () => {
         const variables = {
-            productVariantId: parseInt(data.id),
+            productVariantId: !!variant && parseInt(variant.id),
             quantity: parseInt(quantity)
         }
-
+        console.log('BUY', variables);
         addItemToOrder({
             variables: variables
         }).then((res) => {
             const { addItemToOrder: { subTotal } } = res.data;
+            console.log('BUY-subtotal', subTotal);
             setValue(subTotal);
             orderContext.setSubTotal(subTotal);
         });
@@ -183,8 +175,14 @@ const ProductItem = ({ data }: Props) => {
                     {description}
                 </p>
                 <div className='actionContainer'>
-                    <Button onClick={handleClickBuy} >Buy</Button>
-                    <InputNumber type='number' value={quantity} onChange={handleQuantityChange} min={1} />
+                    {
+                        !!variant && (
+                            <>
+                                <Button onClick={handleClickBuy} >Buy</Button>
+                                <InputNumber type='number' value={quantity} onChange={handleQuantityChange} min={1} />
+                            </>
+                        )
+                    }
                 </div>
             </div>
 
