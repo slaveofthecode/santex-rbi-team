@@ -8,6 +8,7 @@ import { PRODUCT_ASSETS_TYPE, PRODUCT_TYPE, PRODUCT_VARIANTS_TYPE } from '../typ
 import { KEY_STORAGE } from '../enums';
 import useStateWithStorage from '../hooks/useStateWithStorage';
 import { Button, InputNumber } from '../styles/components';
+import { formatCurrency } from '../utils';
 
 const ProductItemContainerStyle = styled.div`
     display: flex;
@@ -170,7 +171,7 @@ const ProductItem = ({ data }: Props) => {
                 </div>
             </div>
             <div className='dataContaier'>
-                <span className='price'>$ {variant?.price}</span>
+                <span className='price'>{!!variant && formatCurrency(variant.price)}</span>
                 <p className='description'>
                     {description}
                 </p>
