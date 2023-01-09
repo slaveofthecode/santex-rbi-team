@@ -1,6 +1,13 @@
 :root {
         --bg-color-header: rgba(255, 0, 0, 1);
+        --bg-color-header-light: rgba(255, 0, 0, .25);
         --bg-color-main: rgba(255, 255, 255, 1);
+        --bg-color-secondary-dark-light: rgba(0, 0, 0, .25);
         --bg-color-secondary: rgba(0, 0, 0, .05);
+        --bg-color-secondary-light: rgba(0, 0, 0, .025);
+        
         --shadow-color-main: rgba(128, 128, 128, 0.75);
+
+        --color-linkedin: rgba(0, 119, 181, 1);
+        --tx-color-secondary: rgba(255, 255, 255, 1);
 }

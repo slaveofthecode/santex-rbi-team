@@ -1,43 +1,103 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
-import { PRODUCT_ASSETS_TYPE, PRODUCT_TYPE, PRODUCT_VARIANTS_TYPE } from '../types/productType';
 import { useMutation } from '@apollo/client';
+import styled from 'styled-components';
 import { ADD_ITEM_TO_ORDER } from '../graphql/mutations';
 import { useOrderContext } from '../contexts/orderContext';
+import { PRODUCT_ASSETS_TYPE, PRODUCT_TYPE, PRODUCT_VARIANTS_TYPE } from '../types/productType';
 import { KEY_STORAGE } from '../enums';
 import useStateWithStorage from '../hooks/useStateWithStorage';
-import styled from 'styled-components';
 import { Button, InputNumber } from '../styles/components';
+import { formatCurrency } from '../utils';
 
 const ProductItemContainerStyle = styled.div`
     display: flex;
-    flex-direction: column;
-    height: fit-content;
-    width: 200px;
-    gap: 20px;
-    padding: 10px;
-    overflow: auto;
-    border: 1px solid var(--bg-color-secondary);
-    box-shadow: 0 0 10px var(--bg-color-secondary);
-`;
+    transition: all 0.3s 0s ease-in-out;
 
-const ImageStyle = styled.div`
-    height: 50%;
-    img {
-        width: 100%;        
+    &:hover {
+        box-shadow: 0 5px 10px var(--shadow-color-main);
+        border-radius: 25px 0 0 0;
     }
-`;
 
-const InfoStyle = styled.div`
-    height: 25%;
-    overflow: hidden;
-`;
+    > .imageContainer {
+        flex: 3;
+        display: flex;
+        align-items: start ;
+        background:  linear-gradient(180deg, var(--bg-color-secondary-dark-light), transparent);
+        border-radius: 25px 25px 0 0;
+        position: relative;
 
-const ActionsStyle = styled.div`
-    height: 25%;
-    gap: 10px;
-    display: flex;
-    flex-direction: column;
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            padding: 5px;            
+            border-radius: 25px 25px 0 0;
+        }
+
+        > .nameContainer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: var(--shadow-color-main);
+            padding: 15px;
+            color: var(--tx-color-secondary);            
+        }
+    }
+
+    > .dataContaier {
+        flex: 2;
+        position: relative;
+        padding-bottom: 10px;
+
+        > .price {
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: right;
+            width: 100%;
+            display: inline-block;
+            padding: 0 10px;
+        }
+        
+        > .description {
+            font-size: .85rem;
+            text-align: justify;
+            width: 100%;
+            display: inline-block;
+            padding: 10px;
+            
+        }
+        
+        > .actionContainer {
+            padding: 0 10px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+
+    > .priceContainer {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: var(--shadow-color-main);
+        padding: 15px;
+        border-radius: 5px;
+        color: var(--tx-color-secondary);
+    }
+
+    > .infoContainer {
+        display: none;
+    } 
+
+    > .actionContainer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto 1fr;
+    }
 `;
 
 type Props = {
@@ -52,14 +112,14 @@ const ProductItem = ({ data }: Props) => {
     const [, setValue] = useStateWithStorage(KEY_STORAGE.ORDER_SUB_TOTAL, '');
 
 
-    const [variant, setVariant] = useState<PRODUCT_VARIANTS_TYPE | null>(null);
+    const [variant, setVariant] = useState<PRODUCT_VARIANTS_TYPE>();
     const [asset, setAsset] = useState<PRODUCT_ASSETS_TYPE | null>(null);
     const [quantity, setQuantity] = useState<string>('1');
 
 
     useEffect(() => {
         const variant = getVariant();
-        setVariant(variant);
+        variant && setVariant(variant);
 
         const asset = getAsset();
         setAsset(asset);
@@ -69,6 +129,7 @@ const ProductItem = ({ data }: Props) => {
     const getVariant = () => {
         if (!variants.length) return null;
 
+        // get the last variant.id
         const sortedVariants = [...variants].sort((a: any, b: any) => a.id - b.id);
         return sortedVariants[0];
 
@@ -83,14 +144,15 @@ const ProductItem = ({ data }: Props) => {
 
     const handleClickBuy = () => {
         const variables = {
-            productVariantId: parseInt(data.id),
+            productVariantId: !!variant && parseInt(variant.id),
             quantity: parseInt(quantity)
         }
-
+        console.log('BUY', variables);
         addItemToOrder({
             variables: variables
         }).then((res) => {
             const { addItemToOrder: { subTotal } } = res.data;
+            console.log('BUY-subtotal', subTotal);
             setValue(subTotal);
             orderContext.setSubTotal(subTotal);
         });
@@ -101,22 +163,29 @@ const ProductItem = ({ data }: Props) => {
     }
 
     return (
-        <ProductItemContainerStyle>
-
-            <ImageStyle>
+        <ProductItemContainerStyle>            
+            <div className='imageContainer'>
                 <img src={asset?.source} alt={data.name} />
-            </ImageStyle>
-
-            <InfoStyle>
-                <div>{name}</div>
-                <div>{description}</div>
-                <div>$ {variant?.price}</div>
-            </InfoStyle>
-
-            <ActionsStyle>
-                <Button onClick={handleClickBuy} >Buy</Button>
-                <InputNumber type='number' value={quantity} onChange={handleQuantityChange} min={1} />
-            </ActionsStyle>
+                <div className='nameContainer'>
+                    <span>{name}</span>
+                </div>
+            </div>
+            <div className='dataContaier'>
+                <span className='price'>{!!variant && formatCurrency(variant.price)}</span>
+                <p className='description'>
+                    {description}
+                </p>
+                <div className='actionContainer'>
+                    {
+                        !!variant && (
+                            <>
+                                <Button onClick={handleClickBuy} >Buy</Button>
+                                <InputNumber type='number' value={quantity} onChange={handleQuantityChange} min={1} />
+                            </>
+                        )
+                    }
+                </div>
+            </div>
 
         </ProductItemContainerStyle>
     )
