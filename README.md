@@ -1,4 +1,4 @@
-## This repos is pending to finish it
+## This repo is pending to finish it
 
 ### utils
 - https://www.vendure.io/
