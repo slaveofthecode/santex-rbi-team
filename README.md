@@ -1,3 +1,16 @@
+## This repos is pending to finish it
+
+### utils
+- https://www.vendure.io/
+- https://classic.yarnpkg.com/en/docs/usage
+- https://icons.getbootstrap.com/
+- https://www.figma.com/file/pQ3QxypbK5HPUTLcboRyno/santex-rbi-team?node-id=0%3A1&t=8LbjEYlOrZwju5wP-0
+- https://redux.js.org/
+- https://www.apollographql.com/docs/
+- https://getbootstrap.com/docs/5.3/getting-started/introduction/#cdn-links
+- https://styled-components.com/
+
+
 # Santex RBI Team - Front End Training Challenge
 
 Quick challenge to help candidates to join RBI Team to catch up with currently used technologies
